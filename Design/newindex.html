@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MJ Player</title>
+    <!-- CSS file ko yahan link karein -->
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+
+    <div class="music-player-container">
+        
+        <!-- YEH RAHA AAPKA NAAM -->
+        <h1 class="player-title">MJ Player</h1>
+
+        <img src="./default.jpg" id="song-image" alt="Album Art">
+        <div id="song-title" class="song-title">Player Load Ho Raha Hai...</div>
+        
+        <audio id="audio-player"></audio>
+        <div id="youtube-player" style="position: absolute; top: -9999px; left: -9999px;"></div>
+
+        <div class="navigation-controls">
+            <button id="prev-btn" class="nav-button">◀◀</button>
+            <button id="play-pause-btn" class="nav-button">▶</button>
+            <button id="next-btn" class="nav-button">▶▶</button>
+        </div>
+        
+        <a id="download-link" href="#" class="download-button" download>Gaana Download Karein</a>
+
+        <div class="youtube-input-group">
+            <input type="text" id="youtube-url" placeholder="YouTube Player taiyar ho raha hai..." disabled>
+            <button id="play-yt-btn" disabled>Play</button>
+        </div>
+    </div>
+
+    <!-- YouTube API Script -->
+    <script src="https://www.youtube.com/iframe_api"></script>
+    <!-- Apni JavaScript file ko hamesha body ke end mein link karein -->
+    <script src="./script.js"></script>
+</body>
+</html>
