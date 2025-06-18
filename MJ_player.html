@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Mera Hybrid Music Player</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #eaf0f7;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 20px;
+    }
+    .music-player-container {
+      background: #ffffff;
+      padding: 25px 30px;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      width: 90%;
+      max-width: 400px;
+      text-align: center;
+    }
+    #song-image {
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin: 0 auto 20px auto;
+      border: 5px solid #f0f2f5;
+    }
+    .rotate {
+      animation: spin 8s linear infinite;
+    }
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    .song-title {
+      font-size: 22px;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 20px;
+      min-height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    audio {
+      display: none;
+    }
+    .navigation-controls {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 20px;
+      margin-top: 15px;
+    }
+    .nav-button {
+      background-color: #f0f2f5;
+      border: none;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      font-size: 20px;
+      cursor: pointer;
+      color: #555;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: all 0.2s;
+    }
+    #play-pause-btn {
+      width: 65px;
+      height: 65px;
+      font-size: 28px;
+      background-color: #007bff;
+      color: white;
+    }
+    .download-button {
+      display: inline-block;
+      background-color: #007bff;
+      color: #ffffff;
+      padding: 12px 30px;
+      text-decoration: none;
+      border-radius: 50px;
+      font-weight: bold;
+      margin-top: 25px;
+      transition: all 0.3s;
+    }
+    .download-button.disabled {
+      background-color: #a0a0a0;
+      cursor: not-allowed;
+      opacity: 0.7;
+    }
+    .youtube-input-group {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+    }
+    #youtube-url {
+      flex-grow: 1;
+      padding: 10px 15px;
+      border-radius: 20px;
+      border: 1px solid #ccc;
+      background: #f0f2f5;
+    }
+    #youtube-url:disabled {
+      background-color: #e9e9e9;
+      cursor: not-allowed;
+    }
+    #play-yt-btn {
+      padding: 10px 15px;
+      border: none;
+      border-radius: 20px;
+      background-color: #ff0000;
+      color: #fff;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    #play-yt-btn:disabled {
+      background-color: #ff8a8a;
+      cursor: not-allowed;
+    }
+    #youtube-player {
+      width: 100%;
+      height: 200px;
+      margin-top: 20px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+<div class="music-player-container">
+  <img src="" id="song-image" alt="Album Art">
+  <div id="song-title" class="song-title">Player taiyar ho raha hai...</div>
+  <audio id="audio-player"></audio>
+  <div id="youtube-player"></div>
+
+  <div class="navigation-controls">
+    <button id="prev-btn" class="nav-button">◀◀</button>
+    <button id="play-pause-btn" class="nav-button">▶</button>
+    <button id="next-btn" class="nav-button">▶▶</button>
+  </div>
+
+  <a id="download-link" href="#" class="download-button" download>Gaana Download Karein</a>
+
+  <div class="youtube-input-group">
+    <input type="text" id="youtube-url" placeholder="YouTube Player taiyar ho raha hai..." disabled>
+    <button id="play-yt-btn" disabled>Play</button>
+  </div>
+</div>
+
+<script src="https://www.youtube.com/iframe_api"></script>
+<script>
+  const elements = {
+    audioPlayer: document.getElementById('audio-player'),
+    songImage: document.getElementById('song-image'),
+    songTitle: document.getElementById('song-title'),
+    downloadLink: document.getElementById('download-link'),
+    playPauseBtn: document.getElementById('play-pause-btn'),
+    prevBtn: document.getElementById('prev-btn'),
+    nextBtn: document.getElementById('next-btn'),
+    ytUrlInput: document.getElementById('youtube-url'),
+    ytPlayBtn: document.getElementById('play-yt-btn'),
+    ytPlayerContainer: document.getElementById('youtube-player')
+  };
+
+  const state = {
+    playlist: [
+      { type: 'mp3', title: 'Pehla Gaana (MP3)', src: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3', image: 'https://i.imgur.com/3Q3SoKk.png', download: '#' },
+      { type: 'mp3', title: 'Doosra Gaana (MP3)', src: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3', image: 'https://i.imgur.com/5uC8x2s.png', download: '#' }
+    ],
+    currentSongIndex: 0,
+    ytPlayer: null,
+    isPlaying: false,
+    isYTPlayerReady: false
+  };
+
+  function onYouTubeIframeAPIReady() {
+    state.ytPlayer = new YT.Player('youtube-player', {
+      height: '200',
+      width: '100%',
+      events: {
+        'onReady': onPlayerReady,
+        'onStateChange': onPlayerStateChange
+      }
+    });
+  }
+
+  function onPlayerReady() {
+    state.isYTPlayerReady = true;
+    elements.ytUrlInput.disabled = false;
+    elements.ytPlayBtn.disabled = false;
+    elements.ytUrlInput.placeholder = 'YouTube link yahan daalein';
+    loadSong(state.currentSongIndex);
+  }
+
+  function onPlayerStateChange(event) {
+    if (event.data === YT.PlayerState.PLAYING) {
+      const videoData = state.ytPlayer.getVideoData();
+      elements.songTitle.textContent = videoData.title;
+      updateIsPlaying(true);
+    } else if (event.data === YT.PlayerState.PAUSED) {
+      updateIsPlaying(false);
+    } else if (event.data === YT.PlayerState.ENDED) {
+      playNextSong();
+    }
+  }
+
+  function loadSong(index) {
+    updateIsPlaying(false);
+    state.currentSongIndex = index;
+    const song = state.playlist[index];
+
+    elements.songTitle.textContent = song.title;
+    elements.songImage.src = song.image || 'https://i.imgur.com/JFHwTzF.png';
+
+    if (song.type === 'mp3') {
+      elements.audioPlayer.src = song.src;
+      elements.audioPlayer.style.display = 'block';
+      elements.ytPlayerContainer.style.display = 'none';
+      elements.downloadLink.classList.remove('disabled');
+      elements.downloadLink.href = song.download;
+    } else if (song.type === 'youtube') {
+      elements.audioPlayer.pause();
+      elements.audioPlayer.style.display = 'none';
+      elements.ytPlayerContainer.style.display = 'block';
+      elements.downloadLink.classList.add('disabled');
+      elements.downloadLink.href = '#';
+    }
+  }
+
+  function playSong() {
+    const song = state.playlist[state.currentSongIndex];
+    if (song.type === 'mp3') {
+      elements.audioPlayer.play();
+    } else if (song.type === 'youtube' && state.isYTPlayerReady) {
+      elements.ytPlayerContainer.style.display = 'block';
+      state.ytPlayer.loadVideoById(song.id);
+    }
+  }
+
+  function pauseSong() {
+    const song = state.playlist[state.currentSongIndex];
+    if (song.type === 'mp3') {
+      elements.audioPlayer.pause();
+    } else if (song.type === 'youtube' && state.isYTPlayerReady) {
+      state.ytPlayer.pauseVideo();
+    }
+  }
+
+  function updateIsPlaying(isPlaying) {
+    state.isPlaying = isPlaying;
+    elements.playPauseBtn.innerHTML = isPlaying ? '❚❚' : '▶';
+    elements.songImage.classList.toggle('rotate', isPlaying);
+  }
+
+  function playNextSong() {
+    state.currentSongIndex = (state.currentSongIndex + 1) % state.playlist.length;
+    loadSong(state.currentSongIndex);
+    playSong();
+  }
+
+  function playPrevSong() {
+    state.currentSongIndex = (state.currentSongIndex - 1 + state.playlist.length) % state.playlist.length;
+    loadSong(state.currentSongIndex);
+    playSong();
+  }
+
+  elements.playPauseBtn.addEventListener('click', () => {
+    state.isPlaying ? pauseSong() : playSong();
+  });
+  elements.prevBtn.addEventListener('click', playPrevSong);
+  elements.nextBtn.addEventListener('click', playNextSong);
+
+  elements.audioPlayer.addEventListener('play', () => updateIsPlaying(true));
+  elements.audioPlayer.addEventListener('pause', () => updateIsPlaying(false));
+  elements.audioPlayer.addEventListener('ended', playNextSong);
+
+  elements.ytPlayBtn.addEventListener('click', () => {
+    const url = elements.ytUrlInput.value;
+    const match = url.match(/(?:v=|\/)([0-9A-Za-z_-]{11})/);
+    if (match && match[1]) {
+      const videoId = match[1];
+      const newSong = {
+        type: 'youtube',
+        id: videoId,
+        title: 'YouTube Gaana (Loading...)',
+        image: `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`
+      };
+      state.playlist.push(newSong);
+      elements.ytUrlInput.value = '';
+      loadSong(state.playlist.length - 1);
+      playSong();
+    } else {
+      alert("Yeh valid YouTube link nahi hai.");
+    }
+  });
+</script>
+</body>
+</html>
