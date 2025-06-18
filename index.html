@@ -5,53 +5,49 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mera Hybrid Music Player</title>
     <style>
-        /* CSS Bilkul Pehle Jaisa Hi Hai, Bas Naye Input ke liye thodi styling hai */
+        /* CSS mein koi badlav nahi hai */
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #eaf0f7; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; }
         .music-player-container { background: #ffffff; padding: 25px 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); width: 90%; max-width: 380px; text-align: center; }
         #song-image { width: 180px; height: 180px; border-radius: 50%; object-fit: cover; margin: 0 auto 20px auto; border: 5px solid #f0f2f5; }
         .rotate { animation: spin 8s linear infinite; }
         @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        .song-title { font-size: 24px; font-weight: 600; color: #333; margin-bottom: 10px; min-height: 28px; }
-        audio { width: 100%; margin-top: 15px; }
-        .navigation-controls { display: flex; justify-content: center; gap: 25px; margin-top: 20px; }
-        .nav-button { background-color: #f0f2f5; border: none; border-radius: 50%; width: 55px; height: 55px; font-size: 24px; cursor: pointer; color: #555; display: flex; justify-content: center; align-items: center; transition: all 0.2s; }
-        .nav-button:hover { background-color: #dfe7f0; }
+        .song-title { font-size: 22px; font-weight: 600; color: #333; margin-bottom: 20px; min-height: 50px; display: flex; align-items: center; justify-content: center; }
+        audio { display: none; }
+        .navigation-controls { display: flex; justify-content: center; align-items: center; gap: 20px; margin-top: 15px; }
+        .nav-button { background-color: #f0f2f5; border: none; border-radius: 50%; width: 50px; height: 50px; font-size: 20px; cursor: pointer; color: #555; display: flex; justify-content: center; align-items: center; transition: all 0.2s; }
+        #play-pause-btn { width: 65px; height: 65px; font-size: 28px; background-color: #007bff; color: white; }
         .download-button { display: inline-block; background-color: #007bff; color: #ffffff; padding: 12px 30px; text-decoration: none; border-radius: 50px; font-weight: bold; margin-top: 25px; transition: all 0.3s; }
         .download-button.disabled { background-color: #a0a0a0; cursor: not-allowed; opacity: 0.7; }
-        
-        /* YouTube Input ke liye Nayi Styling */
         .youtube-input-group { display: flex; gap: 10px; margin-top: 20px; }
         #youtube-url { flex-grow: 1; padding: 10px 15px; border-radius: 20px; border: 1px solid #ccc; background: #f0f2f5; }
+        #youtube-url:disabled { background-color: #e9e9e9; cursor: not-allowed; }
         #play-yt-btn { padding: 10px 15px; border: none; border-radius: 20px; background-color: #ff0000; color: #fff; font-weight: bold; cursor: pointer; }
+        #play-yt-btn:disabled { background-color: #ff8a8a; cursor: not-allowed; }
     </style>
 </head>
 <body>
 
     <div class="music-player-container">
         <img src="" id="song-image" alt="Album Art">
-        <div id="song-title" class="song-title">Loading...</div>
+        <div id="song-title" class="song-title">Player taiyar ho raha hai...</div>
         
-        <!-- Player 1: Normal MP3 ke liye (yeh dikhega) -->
-        <audio id="audio-player" controls></audio>
-        
-        <!-- Player 2: YouTube ke liye (yeh chupa rahega) -->
+        <audio id="audio-player"></audio>
         <div id="youtube-player" style="display: none;"></div>
 
         <div class="navigation-controls">
             <button id="prev-btn" class="nav-button">◀◀</button>
+            <button id="play-pause-btn" class="nav-button">▶</button>
             <button id="next-btn" class="nav-button">▶▶</button>
         </div>
         
         <a id="download-link" href="#" class="download-button" download>Gaana Download Karein</a>
 
-        <!-- YouTube Link daalne ke liye naya section -->
         <div class="youtube-input-group">
-            <input type="text" id="youtube-url" placeholder="YouTube link yahan daalein">
-            <button id="play-yt-btn">Play</button>
+            <input type="text" id="youtube-url" placeholder="YouTube Player taiyar ho raha hai..." disabled>
+            <button id="play-yt-btn" disabled>Play</button>
         </div>
     </div>
 
-    <!-- YouTube API ka script -->
     <script src="https://www.youtube.com/iframe_api"></script>
     
     <script>
@@ -60,122 +56,153 @@
         const songImage = document.getElementById('song-image');
         const songTitle = document.getElementById('song-title');
         const downloadLink = document.getElementById('download-link');
+        const playPauseBtn = document.getElementById('play-pause-btn');
         const prevBtn = document.getElementById('prev-btn');
         const nextBtn = document.getElementById('next-btn');
+        const ytUrlInput = document.getElementById('youtube-url');
+        const ytPlayBtn = document.getElementById('play-yt-btn');
 
-        // === Aapki Website ke Gaane (MP3 Playlist) ===
+        // === Playlist ===
         const myPlaylist = [
-            {
-                type: 'mp3', // <-- Type batana zaroori hai
-                title: 'Pehla Gaana',
-                src: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3',
-                image: 'https://i.imgur.com/3Q3SoKk.png',
-                download: 'https://terabox.com/s/link1'
-            },
-            {
-                type: 'mp3',
-                title: 'Doosra Gaana',
-                src: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3',
-                image: 'https://i.imgur.com/5uC8x2s.png',
-                download: 'https://terabox.com/s/link2'
-            }
+            { type: 'mp3', title: 'Pehla Gaana', src: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3', image: 'https://i.imgur.com/3Q3SoKk.png', download: '#' },
+            { type: 'mp3', title: 'Doosra Gaana', src: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3', image: 'https://i.imgur.com/5uC8x2s.png', download: '#' }
         ];
 
-        let currentPlaylist = [...myPlaylist]; // Ismein YouTube gaane bhi judenge
+        let currentPlaylist = [...myPlaylist];
         let currentSongIndex = 0;
         let ytPlayer;
+        let isPlaying = false;
+        let isYTPlayerReady = false; // Yeh hai sabse zaroori flag
 
-        // === YouTube Player ko Taiyar Karna ===
+        // === YouTube Player Setup ===
+        // Yeh function YouTube API apne aap call karta hai jab woh ready ho jaata hai.
         function onYouTubeIframeAPIReady() {
             ytPlayer = new YT.Player('youtube-player', {
-                height: '0', width: '0', // Ise chupa kar rakhein
-                events: { 'onStateChange': onPlayerStateChange }
+                height: '0', width: '0',
+                events: { 'onReady': onPlayerReady, 'onStateChange': onPlayerStateChange }
             });
         }
-
-        function onPlayerStateChange(event) {
-            if (event.data === YT.PlayerState.ENDED) {
-                playNextSong(); // YouTube video khatam hone par agla gaana
-            }
+        
+        // Yeh function tab call hoga jab YouTube player poori tarah se load ho chuka hai.
+        function onPlayerReady(event) {
+            isYTPlayerReady = true;
+            ytUrlInput.disabled = false;
+            ytPlayBtn.disabled = false;
+            ytUrlInput.placeholder = 'YouTube link yahan daalein';
+            // Ab player poori tarah taiyar hai, ab hum pehla gaana load kar sakte hain.
+            loadSong(currentSongIndex);
         }
 
-        // === Main Function: Gaana Load Karne ke liye ===
-        function loadSong(index) {
-            const song = currentPlaylist[index];
-            currentSongIndex = index;
-            
-            // Dono players ko pehle rok dein
-            audioPlayer.pause();
-            if (ytPlayer && ytPlayer.stopVideo) ytPlayer.stopVideo();
-
-            songTitle.textContent = song.title;
-            songImage.src = song.image || 'https://i.imgur.com/JFHwTzF.png'; // Default image
-
-            // Check karo gaana MP3 hai ya YouTube
-            if (song.type === 'mp3') {
-                audioPlayer.style.display = 'block'; // MP3 player dikhao
-                audioPlayer.src = song.src;
-                downloadLink.classList.remove('disabled');
-                downloadLink.href = song.download;
-                downloadLink.setAttribute('download', song.title + '.mp3');
-                audioPlayer.play();
-            } else if (song.type === 'youtube') {
-                audioPlayer.style.display = 'none'; // MP3 player chupao
-                downloadLink.classList.add('disabled'); // Download button disable karo
-                downloadLink.href = '#';
-                if(ytPlayer && ytPlayer.loadVideoById) {
-                    ytPlayer.loadVideoById(song.id);
-                    ytPlayer.playVideo();
-                }
+        // Yeh function YouTube player ke state (play/pause/ended) ko batata hai.
+        function onPlayerStateChange(event) {
+            if (event.data === YT.PlayerState.PLAYING) {
+                const videoData = ytPlayer.getVideoData();
+                songTitle.textContent = videoData.title;
+                setIsPlaying(true);
+            } else if (event.data === YT.PlayerState.PAUSED) {
+                setIsPlaying(false);
+            } else if (event.data === YT.PlayerState.ENDED) {
+                playNextSong();
             }
         }
         
-        // === Controls ===
-        function playNextSong() {
-            let nextIndex = currentSongIndex + 1;
-            if (nextIndex >= currentPlaylist.length) {
-                nextIndex = 0; // Aakhiri gaane ke baad pehle par jao
+        // === Player Logic ===
+        function loadSong(index) {
+            setIsPlaying(false);
+            currentSongIndex = index;
+            const song = currentPlaylist[index];
+            
+            songTitle.textContent = song.title;
+            songImage.src = song.image || 'https://i.imgur.com/JFHwTzF.png';
+
+            if (song.type === 'mp3') {
+                audioPlayer.src = song.src;
+                downloadLink.classList.remove('disabled');
+                downloadLink.href = song.download;
+            } else {
+                downloadLink.classList.add('disabled');
+                downloadLink.href = '#';
             }
-            loadSong(nextIndex);
+        }
+
+        function togglePlayPause() {
+            if (isPlaying) {
+                pauseSong();
+            } else {
+                playSong();
+            }
+        }
+
+        function playSong() {
+            const song = currentPlaylist[currentSongIndex];
+            if (song.type === 'mp3') {
+                audioPlayer.play();
+            } else if (song.type === 'youtube' && isYTPlayerReady) {
+                // Hum yahan direct playVideo call karte hain.
+                ytPlayer.playVideo();
+            }
+        }
+
+        function pauseSong() {
+            const song = currentPlaylist[currentSongIndex];
+            if (song.type === 'mp3') {
+                audioPlayer.pause();
+            } else if (song.type === 'youtube' && isYTPlayerReady) {
+                ytPlayer.pauseVideo();
+            }
+        }
+
+        function setIsPlaying(state) {
+            isPlaying = state;
+            playPauseBtn.innerHTML = state ? '❚❚' : '▶';
+            songImage.classList.toggle('rotate', state);
+        }
+
+        function playNextSong() {
+            currentSongIndex = (currentSongIndex + 1) % currentPlaylist.length;
+            loadSong(currentSongIndex);
+            playSong();
         }
 
         function playPrevSong() {
-            let prevIndex = currentSongIndex - 1;
-            if (prevIndex < 0) {
-                prevIndex = currentPlaylist.length - 1; // Pehle gaane se pehle aakhiri par jao
-            }
-            loadSong(prevIndex);
+            currentSongIndex = (currentSongIndex - 1 + currentPlaylist.length) % currentPlaylist.length;
+            loadSong(currentSongIndex);
+            playSong();
         }
-
+        
         // === Event Listeners ===
-        document.addEventListener('DOMContentLoaded', () => loadSong(0)); // Page load par pehla gaana
-        audioPlayer.addEventListener('ended', playNextSong); // MP3 khatam hone par agla gaana
-        audioPlayer.addEventListener('play', () => songImage.classList.add('rotate'));
-        audioPlayer.addEventListener('pause', () => songImage.classList.remove('rotate'));
+        playPauseBtn.addEventListener('click', togglePlayPause);
         prevBtn.addEventListener('click', playPrevSong);
         nextBtn.addEventListener('click', playNextSong);
 
-        // === YouTube Link ko Handle Karna ===
-        document.getElementById('play-yt-btn').addEventListener('click', () => {
-            const urlInput = document.getElementById('youtube-url');
-            const url = urlInput.value;
+        audioPlayer.addEventListener('play', () => setIsPlaying(true));
+        audioPlayer.addEventListener('pause', () => setIsPlaying(false));
+        audioPlayer.addEventListener('ended', playNextSong);
+
+        ytPlayBtn.addEventListener('click', () => {
+            const url = ytUrlInput.value;
             const videoId = url.match(/(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
             
             if (videoId && videoId[1]) {
                 const newSong = {
                     type: 'youtube',
                     id: videoId[1],
-                    title: 'YouTube Gaana (Loading...)', // Title ko abhi temporary rakhte hain
-                    image: `https://i.ytimg.com/vi/${videoId[1]}/hqdefault.jpg` // YouTube se thumbnail
+                    title: 'YouTube Gaana (Loading...)',
+                    image: `https://i.ytimg.com/vi/${videoId[1]}/hqdefault.jpg`
                 };
-                currentPlaylist.push(newSong); // Gaane ko playlist ke end mein daalo
-                urlInput.value = '';
-                loadSong(currentPlaylist.length - 1); // Naye gaane ko play karo
+                // Naya gaana load karo aur use play karo
+                currentPlaylist.push(newSong);
+                ytUrlInput.value = '';
+                loadSong(currentPlaylist.length - 1);
+                
+                // IMPORTANT: Hum yahan video ko play karne se pehle use load karte hain
+                if (isYTPlayerReady) {
+                    ytPlayer.loadVideoById(newSong.id); // This will load and automatically play, triggering onStateChange
+                }
             } else {
                 alert('Yeh ek valid YouTube link nahi hai.');
             }
         });
     </script>
-
 </body>
 </html>
