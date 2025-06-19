@@ -4,46 +4,46 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MJ Player</title>
-    <!-- YEH LINE SABSE ZAROORI HAI - DHYAN DEIN KI AAPKI CSS FILE KA NAAM YAHI HAI -->
     <link rel="stylesheet" href="./style.css">
 </head>
 <body>
 
-    <div class="music-player-container">
-        
-        <div class="logo-container">
-            <!-- Yahan apne logo ki file ka sahi naam daalein -->
-            <img src="./mjlogo.png" alt="MJ Player Logo" class="player-logo">
+    <div class="main-container">
+        <div class="music-player-container">
+            
+            <h1 class="player-title">MJ Player</h1>
+
+            <!-- Aapki di hui PNG image yahan lagegi -->
+            <img src="./disc.png" id="song-image" alt="Album Art">
+
+            <div id="song-title" class="song-title">Player Load Ho Raha Hai...</div>
+            
+            <audio id="audio-player"></audio>
+            <div id="youtube-player" style="position: absolute; top: -9999px; left: -9999px;"></div>
+
+            <div class="navigation-controls">
+                <button id="prev-btn" class="nav-button">◀◀</button>
+                <button id="play-pause-btn" class="nav-button">▶</button>
+                <button id="next-btn" class="nav-button">▶▶</button>
+            </div>
+            
+            <a id="download-link" href="#" class="download-button" download>Download</a>
+
+            <div class="youtube-input-group">
+                <input type="text" id="youtube-url" placeholder="YouTube Player taiyar ho raha hai..." disabled>
+                <!-- Button ka text 'Play' se 'Add' kar diya gaya hai -->
+                <button id="add-yt-btn" disabled>Add</button>
+            </div>
         </div>
 
-        <h1 class="player-title">MJ Player</h1>
-
-        <!-- Yahan apni default image ka sahi naam daalein -->
-        <img src="./default.jpg" id="song-image" alt="Album Art">
-        <div id="song-title" class="song-title">Player Load Ho Raha Hai...</div>
-        
-        <audio id="audio-player"></audio>
-        <div id="youtube-player" style="position: absolute; top: -9999px; left: -9999px;"></div>
-
-        <div class="navigation-controls">
-            <button id="prev-btn" class="nav-button">◀◀</button>
-            <button id="play-pause-btn" class="nav-button">▶</button>
-            <button id="next-btn" class="nav-button">▶▶</button>
+        <!-- ============ NAYA PLAYLIST MENU ============= -->
+        <div class="playlist-container">
+            <h2 class="playlist-title">Playlist</h2>
+            <ul id="playlist-list">
+                <!-- Playlist ke gaane yahan aayenge -->
+            </ul>
         </div>
-        
-        <a id="download-link" href="#" class="download-button" download>Gaana Download Karein</a>
-
-        <div class="youtube-input-group">
-            <input type="text" id="youtube-url" placeholder="YouTube Player taiyar ho raha hai..." disabled>
-            <button id="play-yt-btn" disabled>Play</button>
-        </div>
-
-        <div class="ad-space">
-            <script async="async" data-cfasync="false" src="//pl26953775.profitableratecpm.com/e54c93f45e444a48f6cc1cbbd07d09d2/invoke.js"></script>
-<div id="container-e54c93f45e444a48f6cc1cbbd07d09d2"></div>
-            <p style="color: #666; font-size: 14px;">Advertisement</p>
-        </div>
-
+        <!-- ============================================= -->
     </div>
 
     <script src="https://www.youtube.com/iframe_api"></script>
