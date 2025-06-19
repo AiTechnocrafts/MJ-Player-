@@ -8,13 +8,13 @@ const prevBtn = document.getElementById('prev-btn');
 const nextBtn = document.getElementById('next-btn');
 const ytUrlInput = document.getElementById('youtube-url');
 const addYtBtn = document.getElementById('add-yt-btn');
-const playlistList = document.getElementById('playlist-list'); // Naya playlist menu
+const playlistList = document.getElementById('playlist-list');
 
 // === PLAYLIST & STATE ===
 const myPlaylist = [
-    // Yahan apni PNG image ka naam (disc.png) daalein
-    { type: 'mp3', title: 'Pehla Gaana', src: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3', image: './disc.png', download: '#' },
-    { type: 'mp3', title: 'Doosra Gaana', src: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3', image: './disc.png', download: '#' }
+    // === YAHAN BADLAAV KIYA GAYA HAI ===
+    { type: 'mp3', title: 'Pehla Gaana', src: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3', image: './mjlogo.png', download: '#' },
+    { type: 'mp3', title: 'Doosra Gaana', src: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3', image: './mjlogo.png', download: '#' }
 ];
 let currentPlaylist = [...myPlaylist];
 let currentSongIndex = 0;
@@ -70,7 +70,7 @@ function onPlayerStateChange(event) {
     }
 }
 
-// === NAYA PLAYLIST UI FUNCTION ===
+// === PLAYLIST UI FUNCTION ===
 function updatePlaylistUI() {
     playlistList.innerHTML = '';
     currentPlaylist.forEach((song, index) => {
@@ -91,6 +91,7 @@ function loadSong(index) {
     
     setIsPlaying(false);
     songTitle.textContent = song.title;
+    // Yahan badlav kiya gaya hai taaki youtube video ke liye thumbnail dikhe
     songImage.src = song.type === 'mp3' ? song.image : `https://i.ytimg.com/vi/${song.id}/hqdefault.jpg`;
     updatePlaylistUI();
 
@@ -132,7 +133,7 @@ function pauseSong() {
 
 function setIsPlaying(state) {
     isPlaying = state;
-    playPauseBtn.innerHTML = state ? '❚❚' : '▶'; // Pause : Play
+    playPauseBtn.innerHTML = state ? '❚❚' : '▶';
     songImage.classList.toggle('rotate', state);
 }
 
@@ -161,7 +162,6 @@ function addYouTubeSong() {
         currentPlaylist.push(newSong);
         ytUrlInput.value = '';
         updatePlaylistUI();
-        // Agar gaana play nahi ho raha hai, to naya gaana play kar do
         if (!isPlaying) {
             loadSong(currentPlaylist.length - 1);
             playSong();
@@ -177,4 +177,4 @@ function handlePlaylistClick(e) {
         loadSong(index);
         playSong();
     }
-}
+                     }
