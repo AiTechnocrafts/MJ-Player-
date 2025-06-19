@@ -4,26 +4,29 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MJ Player</title>
-    <!-- CSS file ko yahan link karein -->
     <link rel="stylesheet" href="./style.css">
 </head>
 <body>
 
     <div class="music-player-container">
         
-        <!-- 1. YEH RAHA AAPKA NAAM -->
+        <!-- ================== NAYA SECTION 1: LOGO ================== -->
+        <div class="logo-container">
+            <!-- Yahan apne logo ki file ka sahi naam daalein -->
+            <img src="./my-logo.png" alt="MJ Player Logo" class="player-logo">
+        </div>
+        <!-- ========================================================== -->
+
         <h1 class="player-title">MJ Player</h1>
 
-        <!-- 2. IMAGE KA SAHI NAAM (BINA SPACE KE) -->
-        <img src="musicsjagat (1).jpeg" id="song-image" alt="Album Art">
-        
+        <!-- Yahan apni default image ka sahi naam daalein -->
+        <img src="./default.jpg" id="song-image" alt="Album Art">
         <div id="song-title" class="song-title">Player Load Ho Raha Hai...</div>
         
         <audio id="audio-player"></audio>
         <div id="youtube-player" style="position: absolute; top: -9999px; left: -9999px;"></div>
 
         <div class="navigation-controls">
-            <!-- 3. BUTTON ICONS THEEK KIYE GAYE -->
             <button id="prev-btn" class="nav-button">◀◀</button>
             <button id="play-pause-btn" class="nav-button">▶</button>
             <button id="next-btn" class="nav-button">▶▶</button>
@@ -35,11 +38,17 @@
             <input type="text" id="youtube-url" placeholder="YouTube Player taiyar ho raha hai..." disabled>
             <button id="play-yt-btn" disabled>Play</button>
         </div>
+
+        <!-- ============ NAYA SECTION 2: AD SPACE ============= -->
+        <div class="ad-space">
+            <!-- Adsterra ka code ya affiliate banner yahan daalein -->
+            <p style="color: #666; font-size: 14px;">Advertisement</p>
+        </div>
+        <!-- ===================================================== -->
+
     </div>
 
-    <!-- YouTube API Script -->
     <script src="https://www.youtube.com/iframe_api"></script>
-    <!-- Apni JavaScript file ko hamesha body ke end mein link karein -->
     <script src="./script.js"></script>
 </body>
-</html>
+</html>pp
