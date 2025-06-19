@@ -1,6 +1,6 @@
 /* Naya Teal Theme */
 :root {
-    --primary-color: #00ADB5; /* Yeh hai naya Teal color */
+    --primary-color: #00ADB5;
     --background-color: #222831;
     --player-bg-color: #393E46;
     --text-color: #EEEEEE;
@@ -98,13 +98,12 @@ audio {
     background-color: var(--primary-color); 
     color: white; 
 }
-/* Download button ko chhota kar diya gaya hai */
 .download-button { 
     display: inline-block; 
     background-color: var(--primary-color); 
     color: #ffffff; 
-    padding: 8px 22px; /* Padding kam kar di gayi hai */
-    font-size: 14px; /* Font size bhi chhota kar diya gaya hai */
+    padding: 8px 22px;
+    font-size: 14px;
     text-decoration: none; 
     border-radius: 50px; 
     font-weight: bold; 
@@ -130,13 +129,13 @@ audio {
 }
 #add-yt-btn:disabled { background-color: #8c0000; cursor: not-allowed; }
 
-/* Naye Playlist Menu ki Styling */
 .playlist-container {
     background: var(--player-bg-color);
     padding: 15px;
     border-radius: 15px;
-    max-height: 300px; /* Playlist ki max height, uske baad scrollbar aayega */
-    overflow-y: auto;
+    /* === YAHAN BADLAAV KIYA GAYA HAI === */
+    max-height: 450px; /* Isse lagbhag 10 gaane dikhenge */
+    overflow-y: auto; /* Agar 10 se zyada honge to scrollbar aayega */
 }
 .playlist-title {
     margin: 0 0 10px 0;
@@ -165,9 +164,19 @@ audio {
 #playlist-list li:hover {
     background-color: var(--button-hover-bg-color);
 }
-/* Jo gaana chal raha hai, woh highlight hoga */
 #playlist-list li.active {
     background-color: var(--primary-color);
     color: white;
     font-weight: bold;
+}
+/* AD SPACE KE LIYE STYLING */
+.ad-space {
+    width: 100%;
+    min-height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: var(--player-bg-color);
+    padding: 10px;
+    border-radius: 15px;
 }
