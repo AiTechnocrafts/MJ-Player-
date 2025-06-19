@@ -7,13 +7,14 @@ const playPauseBtn = document.getElementById('play-pause-btn');
 const prevBtn = document.getElementById('prev-btn');
 const nextBtn = document.getElementById('next-btn');
 const ytUrlInput = document.getElementById('youtube-url');
-const ytPlayBtn = document.getElementById('play-yt-btn');
+const addYtBtn = document.getElementById('add-yt-btn');
+const playlistList = document.getElementById('playlist-list'); // Naya playlist menu
 
 // === PLAYLIST & STATE ===
 const myPlaylist = [
-    // Yahan apni default image ka sahi naam daalein
-    { type: 'mp3', title: 'Pehla Gaana', src: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3', image: './default.jpg', download: '#' },
-    { type: 'mp3', title: 'Doosra Gaana', src: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3', image: './default.jpg', download: '#' }
+    // Yahan apni PNG image ka naam (disc.png) daalein
+    { type: 'mp3', title: 'Pehla Gaana', src: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3', image: './disc.png', download: '#' },
+    { type: 'mp3', title: 'Doosra Gaana', src: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3', image: './disc.png', download: '#' }
 ];
 let currentPlaylist = [...myPlaylist];
 let currentSongIndex = 0;
@@ -26,6 +27,7 @@ document.addEventListener('DOMContentLoaded', initPlayer);
 
 function initPlayer() {
     loadSong(currentSongIndex);
+    updatePlaylistUI();
     setupEventListeners();
 }
 
@@ -33,7 +35,8 @@ function setupEventListeners() {
     playPauseBtn.addEventListener('click', togglePlayPause);
     prevBtn.addEventListener('click', playPrevSong);
     nextBtn.addEventListener('click', playNextSong);
-    ytPlayBtn.addEventListener('click', addYouTubeSong);
+    addYtBtn.addEventListener('click', addYouTubeSong);
+    playlistList.addEventListener('click', handlePlaylistClick);
     audioPlayer.addEventListener('play', () => setIsPlaying(true));
     audioPlayer.addEventListener('pause', () => setIsPlaying(false));
     audioPlayer.addEventListener('ended', playNextSong);
@@ -49,21 +52,36 @@ function onYouTubeIframeAPIReady() {
 function onPlayerReady(event) {
     isYTPlayerReady = true;
     ytUrlInput.disabled = false;
-    ytPlayBtn.disabled = false;
+    addYtBtn.disabled = false;
     ytUrlInput.placeholder = 'YouTube link yahan daalein';
 }
 
 function onPlayerStateChange(event) {
     if (event.data === YT.PlayerState.PLAYING) {
         const videoData = ytPlayer.getVideoData();
-        songTitle.textContent = videoData.title;
         currentPlaylist[currentSongIndex].title = videoData.title;
+        songTitle.textContent = videoData.title;
+        updatePlaylistUI();
         setIsPlaying(true);
     } else if (event.data === YT.PlayerState.PAUSED) {
         setIsPlaying(false);
     } else if (event.data === YT.PlayerState.ENDED) {
         playNextSong();
     }
+}
+
+// === NAYA PLAYLIST UI FUNCTION ===
+function updatePlaylistUI() {
+    playlistList.innerHTML = '';
+    currentPlaylist.forEach((song, index) => {
+        const li = document.createElement('li');
+        li.textContent = song.title;
+        li.dataset.index = index;
+        if (index === currentSongIndex) {
+            li.classList.add('active');
+        }
+        playlistList.appendChild(li);
+    });
 }
 
 // === CORE PLAYER LOGIC ===
@@ -73,7 +91,8 @@ function loadSong(index) {
     
     setIsPlaying(false);
     songTitle.textContent = song.title;
-    songImage.src = song.image;
+    songImage.src = song.type === 'mp3' ? song.image : `https://i.ytimg.com/vi/${song.id}/hqdefault.jpg`;
+    updatePlaylistUI();
 
     if (song.type === 'mp3') {
         audioPlayer.src = song.src;
@@ -138,13 +157,24 @@ function addYouTubeSong() {
             type: 'youtube',
             id: videoId[1],
             title: 'YouTube Gaana (Loading...)',
-            image: `https://i.ytimg.com/vi/${videoId[1]}/hqdefault.jpg`
         };
         currentPlaylist.push(newSong);
         ytUrlInput.value = '';
-        loadSong(currentPlaylist.length - 1);
-        playSong();
+        updatePlaylistUI();
+        // Agar gaana play nahi ho raha hai, to naya gaana play kar do
+        if (!isPlaying) {
+            loadSong(currentPlaylist.length - 1);
+            playSong();
+        }
     } else {
         alert('Yeh ek valid YouTube link nahi hai.');
     }
-        }
+}
+
+function handlePlaylistClick(e) {
+    if (e.target && e.target.nodeName === 'LI') {
+        const index = parseInt(e.target.dataset.index, 10);
+        loadSong(index);
+        playSong();
+    }
+}
