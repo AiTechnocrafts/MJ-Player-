@@ -11,6 +11,7 @@ const ytPlayBtn = document.getElementById('play-yt-btn');
 
 // === PLAYLIST & STATE ===
 const myPlaylist = [
+    // Yahan apni default image ka sahi naam daalein
     { type: 'mp3', title: 'Pehla Gaana', src: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3', image: './default.jpg', download: '#' },
     { type: 'mp3', title: 'Doosra Gaana', src: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3', image: './default.jpg', download: '#' }
 ];
@@ -146,4 +147,4 @@ function addYouTubeSong() {
     } else {
         alert('Yeh ek valid YouTube link nahi hai.');
     }
-}
+        }
