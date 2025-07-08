@@ -13,7 +13,7 @@ const playlistList = document.getElementById('playlist-list');
 // === PLAYLIST & STATE ===
 const myPlaylist = [
     // === YAHAN BADLAAV KIYA GAYA HAI ===
-    { type: 'mp3', title: 'Pehla Gaana', src: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3', image: './mjlogo.png', download: '#' },
+    { type: 'mp3', title: ' Atif_Aslam_Hit_Songs', src: 'https://drive.proton.me/urls/ZVYSKPN0YC#rGbY6TLcsup3', image: './mjlogo.png', download: 'https://linksense.in/YtR8H' },
     { type: 'mp3', title: 'Doosra Gaana', src: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3', image: './mjlogo.png', download: '#' }
 ];
 let currentPlaylist = [...myPlaylist];
