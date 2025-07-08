@@ -13,7 +13,7 @@ const playlistList = document.getElementById('playlist-list');
 // === PLAYLIST & STATE ===
 const myPlaylist = [
     // === YAHAN BADLAAV KIYA GAYA HAI ===
-    { type: 'mp3', title: ' Atif_Aslam_Hit_Songs', src: 'https://drive.proton.me/urls/ZVYSKPN0YC#rGbY6TLcsup3', image: './mjlogo.png', download: 'https://linksense.in/YtR8H' },
+    { type: 'mp3', title: ' Atif_Aslam_Hit_Songs', src: 'https://s11.up4ever.download:8443/d/h3op25k3pqy52ag4l5laotlmf3meluvhxn2ikagomordstur2y5tvbmcz7ygomkdy5kyqhs2/Atif_Aslam_Hit_Songs.(256k).mp3', image: './mjlogo.png', download: 'https://linksense.in/YtR8H' },
     { type: 'mp3', title: 'Hits of KK', src: 'https://drive.proton.me/urls/HHCW3FH7A8#ABKBjBr8b8pR', image: './mjlogo.png', download: 'https://linksense.in/Hits_of_KK' },
     { type: 'mp3', title: 'Baarish Vibes With Arijit', src: 'https://drive.proton.me/urls/R3NQ6SK5V0#olUo9ho4Qdn6', image: './mjlogo.png', download: 'https://linksense.in/Arijit_Singh_Barish_ke_gane' },
 ];
