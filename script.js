@@ -14,7 +14,8 @@ const playlistList = document.getElementById('playlist-list');
 const myPlaylist = [
     // === YAHAN BADLAAV KIYA GAYA HAI ===
     { type: 'mp3', title: ' Atif_Aslam_Hit_Songs', src: 'https://drive.proton.me/urls/ZVYSKPN0YC#rGbY6TLcsup3', image: './mjlogo.png', download: 'https://linksense.in/YtR8H' },
-    { type: 'mp3', title: 'Doosra Gaana', src: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3', image: './mjlogo.png', download: '#' }
+    { type: 'mp3', title: 'Hits of KK', src: 'https://drive.proton.me/urls/HHCW3FH7A8#ABKBjBr8b8pR', image: './mjlogo.png', download: 'https://linksense.in/Hits_of_KK' },
+    { type: 'mp3', title: 'Baarish Vibes With Arijit', src: 'https://drive.proton.me/urls/R3NQ6SK5V0#olUo9ho4Qdn6', image: './mjlogo.png', download: 'https://linksense.in/Arijit_Singh_Barish_ke_gane' },
 ];
 let currentPlaylist = [...myPlaylist];
 let currentSongIndex = 0;
