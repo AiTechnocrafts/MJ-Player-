@@ -33,14 +33,59 @@ body {
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); 
     text-align: center; 
     border: 1px solid #444; 
+    position: relative; /* Menu ke liye zaroori */
+}
+/* Naya Header */
+.player-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
 }
 .player-title {
     font-size: 28px;
     font-weight: bold;
     color: var(--primary-color);
-    margin-top: 0;
-    margin-bottom: 20px;
+    margin: 0;
+    text-align: left;
+    flex-grow: 1;
 }
+/* Category Menu Styling */
+.category-menu {
+    position: relative;
+    display: inline-block;
+}
+#category-menu-btn {
+    width: 45px;
+    height: 45px;
+    font-size: 24px;
+}
+.dropdown-content {
+    display: none;
+    position: absolute;
+    right: 0;
+    background-color: #4a505a;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+    border-radius: 8px;
+    padding: 5px 0;
+}
+.dropdown-content a {
+    color: white;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    text-align: left;
+    cursor: pointer;
+}
+.dropdown-content a:hover {
+    background-color: #5b626e;
+}
+.dropdown-content.show {
+    display: block;
+}
+
 #song-image { 
     width: 180px; 
     height: 180px; 
@@ -133,9 +178,8 @@ audio {
     background: var(--player-bg-color);
     padding: 15px;
     border-radius: 15px;
-    /* === YAHAN BADLAAV KIYA GAYA HAI === */
-    max-height: 450px; /* Isse lagbhag 10 gaane dikhenge */
-    overflow-y: auto; /* Agar 10 se zyada honge to scrollbar aayega */
+    max-height: 450px;
+    overflow-y: auto;
 }
 .playlist-title {
     margin: 0 0 10px 0;
@@ -169,7 +213,6 @@ audio {
     color: white;
     font-weight: bold;
 }
-/* AD SPACE KE LIYE STYLING */
 .ad-space {
     width: 100%;
     min-height: 50px;
