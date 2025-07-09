@@ -9,15 +9,20 @@ const nextBtn = document.getElementById('next-btn');
 const ytUrlInput = document.getElementById('youtube-url');
 const addYtBtn = document.getElementById('add-yt-btn');
 const playlistList = document.getElementById('playlist-list');
+const categoryMenuBtn = document.getElementById('category-menu-btn');
+const categoryDropdown = document.getElementById('category-dropdown');
 
 // === PLAYLIST & STATE ===
-const myPlaylist = [
-    // === YAHAN BADLAAV KIYA GAYA HAI ===
-    { type: 'mp3', title: ' Atif_Aslam_Hit_Songs', src: 'https://s11.up4ever.download:8443/d/h3op25k3pqy52ag4l5laotlmf3meluvhxn2ikagomordstur2y5tvbmcz7ygomkdy5kyqhs2/Atif_Aslam_Hit_Songs.(256k).mp3', image: './mjlogo.png', download: 'https://linksense.in/YtR8H' },
-    { type: 'mp3', title: 'Hits of KK', src: 'https://drive.proton.me/urls/HHCW3FH7A8#ABKBjBr8b8pR', image: './mjlogo.png', download: 'https://linksense.in/Hits_of_KK' },
-    { type: 'mp3', title: 'Baarish Vibes With Arijit', src: 'https://drive.proton.me/urls/R3NQ6SK5V0#olUo9ho4Qdn6', image: './mjlogo.png', download: 'https://linksense.in/Arijit_Singh_Barish_ke_gane' },
+// YAHAN APNE GAANO KO CATEGORY KE SAATH DAALEIN
+const masterPlaylist = [
+    { type: 'mp3', title: 'Atif Aslam Hit Songs', src: 'https://s11.up4ever.download:8443/d/h3op25k3pqy52ag4l5laotlmf3meluvhxn2ikagomordstur2y5tvbmcz7ygomkdy5kyqhs2/Atif_Aslam_Hit_Songs.(256k).mp3', image: './mjlogo.png', download: 'https://linksense.in/YtR8H', category: 'Bollywood Hits' },
+    { type: 'mp3', title: 'Hits of KK', src: 'https://dd.uptofiles.com/dd/2024/May/23/664f33b1e32d1/Uptofiles.com-KK_All_Hit_Songs(256k).mp3', image: './mjlogo.png', download: 'https://linksense.in/Hits_of_KK', category: 'Bollywood Hits' },
+    { type: 'mp3', title: 'Baarish Vibes With Arijit', src: 'https://dd.uptofiles.com/dd/2024/May/23/664f346e7f229/Uptofiles.com-Best_Of_Arijit_Singh_Mashup_2023(256k).mp3', image: './mjlogo.png', download: 'https://linksense.in/Arijit_Singh_Barish_ke_gane', category: 'Romantic' },
+    { type: 'mp3', title: 'Hare Krishna Bhajan', src: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3', image: './mjlogo.png', download: '#', category: 'Bhajan' },
+    { type: 'mp3', title: 'Sample Bangla Song', src: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3', image: './mjlogo.png', download: '#', category: 'Bangla' },
 ];
-let currentPlaylist = [...myPlaylist];
+
+let currentPlaylist = [];
 let currentSongIndex = 0;
 let ytPlayer;
 let isPlaying = false;
@@ -27,9 +32,9 @@ let isYTPlayerReady = false;
 document.addEventListener('DOMContentLoaded', initPlayer);
 
 function initPlayer() {
-    loadSong(currentSongIndex);
-    updatePlaylistUI();
     setupEventListeners();
+    populateCategoryMenu();
+    filterPlaylist('All'); // Shuruaat mein saare gaane dikhao
 }
 
 function setupEventListeners() {
@@ -38,9 +43,56 @@ function setupEventListeners() {
     nextBtn.addEventListener('click', playNextSong);
     addYtBtn.addEventListener('click', addYouTubeSong);
     playlistList.addEventListener('click', handlePlaylistClick);
+    categoryMenuBtn.addEventListener('click', toggleCategoryMenu);
     audioPlayer.addEventListener('play', () => setIsPlaying(true));
     audioPlayer.addEventListener('pause', () => setIsPlaying(false));
     audioPlayer.addEventListener('ended', playNextSong);
+}
+
+// === NAYA CATEGORY LOGIC ===
+function populateCategoryMenu() {
+    const categories = ['All', ...new Set(masterPlaylist.map(song => song.category))];
+    categoryDropdown.innerHTML = '';
+    categories.forEach(category => {
+        const a = document.createElement('a');
+        a.textContent = category === 'All' ? 'All Songs' : category;
+        a.dataset.category = category;
+        a.addEventListener('click', () => {
+            filterPlaylist(category);
+            toggleCategoryMenu(); // Menu ko band kar do
+        });
+        categoryDropdown.appendChild(a);
+    });
+}
+
+function filterPlaylist(category) {
+    if (category === 'All') {
+        currentPlaylist = [...masterPlaylist];
+    } else {
+        currentPlaylist = masterPlaylist.filter(song => song.category === category);
+    }
+    updatePlaylistUI();
+    if(currentPlaylist.length > 0) {
+        loadSong(0); // Nayi playlist ka pehla gaana load karo
+    } else {
+        // Agar category mein koi gaana nahi hai
+        songTitle.textContent = "Is category mein koi gaana nahi hai";
+        songImage.src = "./mjlogo.png";
+        currentPlaylist = [];
+        updatePlaylistUI();
+    }
+}
+
+function toggleCategoryMenu() {
+    categoryDropdown.classList.toggle('show');
+}
+// Menu ke bahar click karne par use band kar do
+window.onclick = function(event) {
+    if (!event.target.matches('#category-menu-btn')) {
+        if (categoryDropdown.classList.contains('show')) {
+            categoryDropdown.classList.remove('show');
+        }
+    }
 }
 
 // === YOUTUBE API CALLBACKS ===
@@ -78,7 +130,7 @@ function updatePlaylistUI() {
         const li = document.createElement('li');
         li.textContent = song.title;
         li.dataset.index = index;
-        if (index === currentSongIndex) {
+        if (index === currentSongIndex && isPlaying) {
             li.classList.add('active');
         }
         playlistList.appendChild(li);
@@ -87,12 +139,12 @@ function updatePlaylistUI() {
 
 // === CORE PLAYER LOGIC ===
 function loadSong(index) {
+    if(currentPlaylist.length === 0) return;
     currentSongIndex = index;
     const song = currentPlaylist[index];
     
     setIsPlaying(false);
     songTitle.textContent = song.title;
-    // Yahan badlav kiya gaya hai taaki youtube video ke liye thumbnail dikhe
     songImage.src = song.type === 'mp3' ? song.image : `https://i.ytimg.com/vi/${song.id}/hqdefault.jpg`;
     updatePlaylistUI();
 
@@ -110,6 +162,7 @@ function loadSong(index) {
 }
 
 function togglePlayPause() {
+    if(currentPlaylist.length === 0) return;
     if (isPlaying) pauseSong();
     else playSong();
 }
@@ -136,15 +189,18 @@ function setIsPlaying(state) {
     isPlaying = state;
     playPauseBtn.innerHTML = state ? '❚❚' : '▶';
     songImage.classList.toggle('rotate', state);
+    updatePlaylistUI();
 }
 
 function playNextSong() {
+    if(currentPlaylist.length === 0) return;
     currentSongIndex = (currentSongIndex + 1) % currentPlaylist.length;
     loadSong(currentSongIndex);
     playSong();
 }
 
 function playPrevSong() {
+    if(currentPlaylist.length === 0) return;
     currentSongIndex = (currentSongIndex - 1 + currentPlaylist.length) % currentPlaylist.length;
     loadSong(currentSongIndex);
     playSong();
@@ -159,14 +215,20 @@ function addYouTubeSong() {
             type: 'youtube',
             id: videoId[1],
             title: 'YouTube Gaana (Loading...)',
+            category: 'YouTube' // YouTube gaano ke liye alag category
         };
-        currentPlaylist.push(newSong);
+        // Naye gaane ko master playlist mein bhi daalo
+        masterPlaylist.push(newSong);
+        // Current playlist ko filter karke update karo taaki naya gaana dikhe
+        filterPlaylist(newSong.category);
         ytUrlInput.value = '';
-        updatePlaylistUI();
-        if (!isPlaying) {
+        
+        // Naye gaane ko turant play karo
+        setTimeout(() => {
             loadSong(currentPlaylist.length - 1);
             playSong();
-        }
+        }, 100);
+        
     } else {
         alert('Yeh ek valid YouTube link nahi hai.');
     }
@@ -178,4 +240,4 @@ function handlePlaylistClick(e) {
         loadSong(index);
         playSong();
     }
-                     }
+}
