@@ -15,7 +15,7 @@ const categoryDropdown = document.getElementById('category-dropdown');
 // === PLAYLIST & STATE ===
 // YAHAN APNE GAANO KO CATEGORY KE SAATH DAALEIN
 const masterPlaylist = [
-    { type: 'mp3', title: 'Atif Aslam Hit Songs', src: 'https://s11.up4ever.download:8443/d/h3op25k3pqy52ag4l5laotlmf3meluvhxn2ikagomordstur2y5tvbmcz7ygomkdy5kyqhs2/Atif_Aslam_Hit_Songs.(256k).mp3', image: './mjlogo.png', download: 'https://linksense.in/YtR8H', category: 'Bollywood Hits' },
+    { type: 'mp3', title: 'Jubin Nautiyal Ram bhajans', src: 'https://archive.org/embed/jubin-nautiyal-ram-bhajans-256k', image: './mjlogo.png', download: 'https://.in/YtR8H', category: 'Devotional Songs' },
     { type: 'mp3', title: 'Hits of KK', src: 'https://dd.uptofiles.com/dd/2024/May/23/664f33b1e32d1/Uptofiles.com-KK_All_Hit_Songs(256k).mp3', image: './mjlogo.png', download: 'https://linksense.in/Hits_of_KK', category: 'Bollywood Hits' },
     { type: 'mp3', title: 'Baarish Vibes With Arijit', src: 'https://dd.uptofiles.com/dd/2024/May/23/664f346e7f229/Uptofiles.com-Best_Of_Arijit_Singh_Mashup_2023(256k).mp3', image: './mjlogo.png', download: 'https://linksense.in/Arijit_Singh_Barish_ke_gane', category: 'Romantic' },
     { type: 'mp3', title: 'Hare Krishna Bhajan', src: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3', image: './mjlogo.png', download: '#', category: 'Bhajan' },
