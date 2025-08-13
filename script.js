@@ -16,7 +16,7 @@ const categoryDropdown = document.getElementById('category-dropdown');
 // YAHAN APNE GAANO KO CATEGORY KE SAATH DAALEIN
 const masterPlaylist = [
     { type: 'mp3', title: 'Main Kehta Nahi Sraddha Hain Buri', src: 'https://fsyokvlhxfaqhmfnbhlz.supabase.co/storage/v1/object/public/app-files/apks/Kya%20wo%20krega%20leke%20chadawa__%20Bhala%20__%20Cover%20song%20__%20%20Kedarnath%202022__Shiva%20Album%20_Kedarnath%20yatra(MP3_160K).mp3', image: './mjlogo.png', download: 'https://linksense.in/Kya-vah-karega-lekar-charawa', category: 'Devotional Songs' },
-    { type: 'mp3', title: 'Hits of KK', src: 'https://dd.uptofiles.com/dd/2024/May/23/664f33b1e32d1/Uptofiles.com-KK_All_Hit_Songs(256k).mp3', image: './mjlogo.png', download: 'https://linksense.in/Hits_of_KK', category: 'Bollywood Hits' },
+    { type: 'mp3', title: 'Radha Rani Song', src: 'https://cepdelaoakyubgkvpppb.supabase.co/storage/v1/object/public/admin-songs/Radha%20Rani%20_%20Swasti%20Mehul%20_%20Radha%20Krishna%20Bhajan(MP3_160K).mp3', image: './mjlogo.png', download: '://linksense.in/Hits_of_KK', category: 'Devotional Songs' },
     { type: 'mp3', title: 'Baarish Vibes With Arijit', src: 'https://dd.uptofiles.com/dd/2024/May/23/664f346e7f229/Uptofiles.com-Best_Of_Arijit_Singh_Mashup_2023(256k).mp3', image: './mjlogo.png', download: 'https://linksense.in/Arijit_Singh_Barish_ke_gane', category: 'Romantic' },
     { type: 'mp3', title: 'Hare Krishna Bhajan', src: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3', image: './mjlogo.png', download: '#', category: 'Bhajan' },
     { type: 'mp3', title: 'Sample Bangla Song', src: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3', image: './mjlogo.png', download: '#', category: 'Bangla' },
